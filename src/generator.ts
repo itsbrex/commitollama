@@ -70,6 +70,7 @@ export async function getCommitMessage(summaries: string[]) {
 		commitPrompt,
 		endpoint,
 		commitTemperature,
+		useUppercase,
 		useEmojis,
 		commitEmojis,
 		modelName,
@@ -77,10 +78,10 @@ export async function getCommitMessage(summaries: string[]) {
 	const ollama = new Ollama({ host: endpoint })
 
 	const defaultCommitPrompt = `You are an expert developer specialist in creating commits messages.
-	Your only goal is to retrieve a single commit message. 
+	Your only goal is to retrieve a single commit message.
 	Based on the provided user changes, combine them in ONE SINGLE commit message retrieving the global idea, following strictly the next rules:
-	- Always use the next format: \`{type}: {commit_message}\` where \`{type}\` is one of \`feat\`, \`fix\`, \`docs\`, \`style\`, \`refactor\`, \`test\`, \`chore\`, \`revert\`.
-	- Output directly only one commit message in plain text.
+	- Always use the next format: \`{type}: {commit_message}\` where \`{type}\` is one of \`feat\`, \`fix\`, \`docs\`, \`style\`, \`refactor\`, \`test\`, \`chore\`, \`revert\`, \`performance\`, \`fml\`.
+	-  Output directly only one commit message in plain text.
 	- Be as concise as possible. 50 characters max.
 	- Do not add any issues numeration nor explain your output.`
 
@@ -105,7 +106,8 @@ export async function getCommitMessage(summaries: string[]) {
 			],
 		})
 
-		let commit = response.message.content.replace(/["`]/g, "")
+
+		let commit = response.message.content.replace(/["`]/g, "");
 
 		// Add the emoji to the commit if activated
 		if (useEmojis) {
@@ -115,8 +117,18 @@ export async function getCommitMessage(summaries: string[]) {
 				commit = commit.replace(regex, `${type} ${emoji}`)
 			}
 		}
+		
+		// Transform the commit to uppercase if activated
+		if (useUppercase) {
+			const commitTypeRegex = /^(\w+):/
+			commit = commit.replace(commitTypeRegex, (match, commitType) => {
+				const commitMessage = commit.substring(match.length).trim()
+				return `${commitType.toUpperCase()}: ${commitMessage}`
+			})
+		}
+		
+		return commit.trim();
 
-		return commit.trim()
 	} catch (error) {
 		throw new Error("Unable to generate commit.")
 	}
