@@ -14,4 +14,6 @@ export type EmojisMap = {
 	test: string
 	chore: string
 	revert: string
+	performance: string
+	fml: string
 }

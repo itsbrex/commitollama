@@ -4,15 +4,18 @@ import { type EmojisMap, Model } from "./types/llm"
 export const defaultConfig = {
 	model: Model.Llama3,
 	useEmojis: false,
-	commitEmojis: {
-		feat: "✨",
-		fix: "🐛",
-		docs: "📝",
-		style: "💎",
-		refactor: "♻️",
-		test: "🧪",
-		chore: "📦",
-		revert: "⏪",
+		useUppercase: false,
+		commitEmojis: {
+		FEAT: "✨",
+		FIX: "🔧",
+		DOCS: "📝",
+		STYLE: "💅",
+		REFACTOR: "♻️",
+		TEST: "🔎",
+		CHORE: "📌",
+		REVERT: "⏪",
+		PERFORMANCE: "🚀",
+		FML: "😱",
 	},
 	temperature: 0.8,
 	num_predict: 100,
@@ -28,6 +31,7 @@ class Config {
 			modelName = config.get("custom.model") as string
 		}
 
+
 		// Load Emojis Config
 		const useEmojis: boolean =
 			config.get("useEmojis") || defaultConfig.useEmojis
@@ -36,10 +40,17 @@ class Config {
 
 		// Load endpoint
 		let endpoint: string =
-			config.get("custom.endpoint") || "http://127.0.0.1:11434"
+		config.get("custom.endpoint") || "http://127.0.0.1:11434"
 		if (endpoint.endsWith("/")) {
 			endpoint = endpoint.slice(0, -1).trim()
 		}
+
+		// Refactor Case Config loading and transformation
+		const useUppercase: boolean = config.get("useUppercase") || defaultConfig.useUppercase;
+		const transformCase = useUppercase ? (str: string) => str.toUpperCase() : (str: string) => str.toLowerCase();
+		Object.entries(commitEmojis).forEach(([key, value]) => {
+			commitEmojis[key as keyof EmojisMap] = transformCase(value);
+		});
 
 		// Load custom prompt and temperatures
 		const summaryPrompt = config.get("custom.summaryPrompt") as string
@@ -56,6 +67,8 @@ class Config {
 			commitTemperature,
 			useEmojis,
 			commitEmojis,
+			useUppercase,
+			transformCase
 		}
 	}
 
