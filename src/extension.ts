@@ -32,8 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 async function getSummaryUriDiff(repo: Repository, uri: string) {
 	const diff = await repo.diffIndexWithHEAD(uri)
-	const summary = await getSummary(diff)
-	return summary
+	return await getSummary(diff);
 }
 
 async function createCommitMessage(repo: Repository) {
