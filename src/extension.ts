@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import type { GitExtension, Repository } from './types/git';
 import { getCommitMessage, getSummary } from './generator';
 import { GitExtension, Repository } from './types/git';
 
