@@ -1,5 +1,5 @@
 {
-  "name": "commitollama",
+  "name": "dev-commitollama",
   "displayName": "commitollama",
   "description": "AI Commits with ollama",
   "publisher": "Commitollama",
@@ -61,52 +61,54 @@
             "description": "Model to use for the commit creations.",
             "order": 0
           },
-          "commitollama.useEmojis": {
-            "type": "boolean",
-            "default": false,
-            "description": "Enable or disable the use of emojis in commit messages.",
-            "order": 1
-          },
           "commitollama.useUppercase": {
             "type": "boolean",
             "default": false,
             "description": "Enable or disable the use of UPPERCASE or lowercase in commit message types (not the message itself).",
             "order": 1
           },
+          "commitollama.useEmojis": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable or disable the use of emojis in commit messages.",
+            "order": 2
+          },
           "commitollama.commitEmojis": {
             "type": "object",
             "default": {
+              "init": "🎉",
               "feat": "✨",
-              "fix": "🔧",
-              "docs": "📝",
-              "style": "💅",
-              "refactor": "♻️",
-              "test": "🔎",
-              "chore": "📌",
-              "revert": "⏪",
-              "performance": "🚀",
-              "fml": "😱"
+              "fix": "✅",
+              "docs": "📃",
+              "style": "🌈",
+              "refactor": "🦄",
+              "perf": "⚡",
+              "test": "⌛",
+              "build": "🔧",
+              "ci": "♾️",
+              "chore": "🌀",
+              "revert": "⏪"
             },
             "description": "Map commit types to emojis. Only used if emojis are enabled.",
-            "order": 2
+            "order": 3
           },
           "commitollama.custom.endpoint": {
             "type": "string",
             "default": "",
             "description": "Ollama Server Endpoint. Empty for default ollama endpoint.",
-            "order": 3
+            "order": 4
           },
           "commitollama.custom.model": {
             "type": "string",
             "default": "",
             "description": "You can use a non-listed model always that you have it pulled from ollama. Note: It only will be selected when model is set to \"custom\".",
-            "order": 4
+            "order": 5
           },
           "commitollama.custom.summaryPrompt": {
             "type": "string",
             "default": "",
             "description": "Custom prompt for summarize the git diff.",
-            "order": 5
+            "order": 6
           },
           "commitollama.custom.summaryTemperature": {
             "type": "number",
@@ -114,13 +116,13 @@
             "minimum": 0,
             "maximum": 1,
             "description": "Custom temperature for summarize the git diff. (greater = more creative)",
-            "order": 6
+            "order": 7
           },
           "commitollama.custom.commitPrompt": {
             "type": "string",
             "default": "",
             "description": "Custom prompt for commit message.",
-            "order": 7
+            "order": 8
           },
           "commitollama.custom.commitTemperature": {
             "type": "number",
@@ -128,7 +130,7 @@
             "minimum": 0,
             "maximum": 1,
             "description": "Custom temperature for commit message. (greater = more creative)",
-            "order": 8
+            "order": 9
           }
         }
       }
@@ -140,7 +142,7 @@
     "build": "npm run -S esbuild-base -- --sourcemap",
     "watch": "npm run -S esbuild-base -- --sourcemap --watch",
     "pretest": "npm run build && npm run lint",
-    "lint": "npm dlx @biomejs/biome lint src",
+    "lint": "bunx @biomejs/biome lint src",
     "test": "vscode-test"
   },
   "devDependencies": {

@@ -3,6 +3,9 @@ dist
 node_modules
 .vscode-test/
 *.vsix
+.lh
+.history
+notes
 
 .history
 .lh
