@@ -79,8 +79,8 @@ feat(blog): add comment section
 chore: run tests on CI
 fix(server): send CORS headers
 
-Example of good multi-line commit message:
-\"feat(semantic-release): automate versioning and release
+Realworld example of a good multi-line commit message (for reference only - do not use this text literally):
+\"\"\"feat(semantic-release): automate versioning and release
 
 ✨ Configure semantic-release to streamline releases:
 
@@ -89,7 +89,7 @@ Example of good multi-line commit message:
 - Publish new versions to NPM
 - Commit types: init, feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
 - Use releaseRules to analyze conventional commits
-- Integrate with CI pipeline\"`;
+- Integrate with CI pipeline\"\"\"`;
   const prompt = commitPrompt || defaultCommitPrompt;
 
   try {
