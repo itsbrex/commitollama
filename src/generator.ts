@@ -8,28 +8,12 @@ export async function getSummary(diff: string): Promise<string> {
   const ollama = new Ollama({ host: endpoint });
 
   const defaultSummaryPrompt =
-    `Write a Git commit message in Bill Gates style in present tense for the provided diff without prefacing it with anything, the response must be in the language English.
-  Lines must not be longer than 74 characters.
-  The sent text will be the differences between files, where deleted lines are prefixed with a single minus sign and added lines are prefixed with a single plus sign.
-  Make absolutely sure, that the first line of the message always follows the requirements of semantic-release, so that automated processes can easily generate a new version from the commit message. Your only goal is to retrieve a single commit message.
-  Based on the provided user changes, combine them in ONE SINGLE commit message retrieving the global idea, following strictly the next rules:
-  Always use the next format: \'{type}(scope?): {commit_message}\` where \`{type}\` is one of \`init\`, \`feat\`, \`fix\`, \`docs\`, \`style\`, \`refactor\`, \`perf\`, \`test\`, \`build\`, \`ci\`, \`chore\`, \`revert\` and where \`scope\` is optional'
-  -  Output directly a single commit message in plain text.
-  - Be as concise as possible. 50 characters max.
-  - Do not add any issues numeration nor explain your output.
-  - In general the pattern mostly looks like this: {type}(scope?): {commit_message}
-  Real world examples can look like this:
-  - chore: run tests on travis ci
-  - fix(server): send cors headers
-  - feat(blog): add comment section
-  Example:
-  feat(wasm-plugin): Add WasmPlugin resource for Istio Ingress
-  ✨ Add WasmPlugin resource for Istio Ingress
-  ℹ️ This commit adds a WasmPlugin resource to the ingress.tf file. The WasmPlugin resource is used to configure Wasm plugins for Istio Ingress.
-  The changes include:
-  - Adding a new resource kubectl_manifest for the WasmPlugin
-  - Configuring the WasmPlugin with the necessary metadata, spec, and annotations
-  - Defining the pluginConfig for the WasmPlugin`;
+    `You are an expert developer specialist in creating commits.
+Provide a super concise one sentence overall changes summary of the user \`git diff\` output following strictly the next rules:
+- Do not use any code snippets, imports, file routes or bullets points.
+- Do not mention the route of file that has been change.
+- Simply describe the MAIN GOAL of the changes.
+- Output directly the summary in plain text.`;
 
   const prompt = summaryPrompt || defaultSummaryPrompt;
 
@@ -75,45 +59,37 @@ export async function getCommitMessage(summaries: string[]) {
   } = config.inference;
   const ollama = new Ollama({ host: endpoint });
 
-  //   const defaultCommitPrompt = `You are an expert developer specialist in creating commits messages.
-  // Your only goal is to retrieve a single commit message.
-  // Based on the provided user changes, combine them in ONE SINGLE commit message retrieving the global idea, following strictly the next rules:
-  // Always use the next format: \'{type}[scope?]: {commit_message}\` where \`{type}\` is one of \`init\`, \`feat\`, \`fix\`, \`docs\`, \`style\`, \`refactor\`, \`perf\`, \`test\`, \`build\`, \`ci\`, \`chore\`, \`revert\` and where scope is optional.'
-  // - Output directly a single commit message in plain text.
-  // - Be as concise as possible. 74 characters max.
-  // - Do not add any issues numeration nor explain your output.
-  // - In general the pattern mostly looks like this: {type}(scope?): {commit_message}
-  // Real world examples can look like this:
-  // - feat(wasm-plugin): add WasmPlugin resource for Istio Ingress
-  // - chore: run tests on travis ci
-  // - fix(server): send CORS headers
-
   const defaultCommitPrompt =
-    `Write a Git commit message in Bill Gates style in present tense for the provided diff without prefacing it with anything, the response must be in the language English.
-Lines must not be longer than 74 characters.
-The sent text will be the differences between files, where deleted lines are prefixed with a single minus sign and added lines are prefixed with a single plus sign.
-Make absolutely sure, that the first line of the message always follows the requirements of semantic-release, so that automated processes can easily generate a new version from the commit message. Your only goal is to retrieve a single commit message.
-Based on the provided user changes, combine them in ONE SINGLE commit message retrieving the global idea, following strictly the next rules:
-Always use the next format: \'{type}(scope?): {commit_message}\` where \`{type}\` is one of \`init\`, \`feat\`, \`fix\`, \`docs\`, \`style\`, \`refactor\`, \`perf\`, \`test\`, \`build\`, \`ci\`, \`chore\`, \`revert\` and where \`scope\` is optional'
--  Output directly a single commit message in plain text.
-- Be as concise as possible. 50 characters max.
-- Do not add any issues numeration nor explain your output.
-- In general the pattern mostly looks like this: {type}(scope?): {commit_message}
-Real world examples can look like this:
-- chore: run tests on travis ci
-- fix(server): send cors headers
-- feat(blog): add comment section
-Example:
-feat(wasm-plugin): Add WasmPlugin resource for Istio Ingress
+    `Write a Git commit message for the provided diff following these requirements:
 
-✨ Add WasmPlugin resource for Istio Ingress
+- Use present tense and omit any preface
+- Keep lines under 74 characters
+- Diff format: removed lines start with "-", added lines start with "+"
+- Ensure the first line enables semantic-release automation
+- Use format: {type}(scope?): {message}
+  - type: init, feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+  - scope: optional, e.g. (server), (blog)
+- Combine all changes into a single, concise message
+- Limit to 100 characters
+- Omit issue numbers and explanations
+- Message can span multiple lines with emojis and formatting
 
-ℹ️ This commit adds a WasmPlugin resource to the ingress.tf file. The WasmPlugin resource is used to configure Wasm plugins for Istio Ingress.
-The changes include:
-- Adding a new resource kubectl_manifest for the WasmPlugin
-- Configuring the WasmPlugin with the necessary metadata, spec, and annotations
-- Defining the pluginConfig for the WasmPlugin
-  `;
+Examples of good single-line commit messages:
+feat(blog): add comment section
+chore: run tests on CI
+fix(server): send CORS headers
+
+Example of good multi-line commit message:
+\"feat(semantic-release): automate versioning and release
+
+✨ Configure semantic-release to streamline releases:
+
+- Determine next version from commit messages
+- Generate changelog and release notes
+- Publish new versions to NPM
+- Commit types: init, feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+- Use releaseRules to analyze conventional commits
+- Integrate with CI pipeline\"`;
   const prompt = commitPrompt || defaultCommitPrompt;
 
   try {
