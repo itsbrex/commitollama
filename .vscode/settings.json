@@ -1,11 +1,13 @@
 {
-	"files.exclude": {
-		"out": false
-	},
-	"search.exclude": {
-		"out": true
-	},
-	"typescript.tsc.autoDetect": "off",
-	"cSpell.words": ["commitollama", "ollama"],
-	"editor.defaultFormatter": "biomejs.biome"
+  "files.exclude": {
+    "out": false
+  },
+  "search.exclude": {
+    "out": true
+  },
+  "typescript.tsc.autoDetect": "off",
+  "cSpell.words": [
+    "commitollama",
+    "ollama"
+  ]
 }
